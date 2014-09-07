@@ -1,30 +1,13 @@
 require 'json'
-require 'tempfile'
-
-require "sinatra/base"
 require 'resque'
+require "sinatra/base"
 
-class TextExtractor
-  def initialize(option={})
-    @options = options
-  end
-
-  def call
-    filename = ''
-    File.open(filename) do |file|
-      Docsplit.extract_text(temp.path, output: temp_dir)
-    end
-  end
-end
 
 class TextExtractionJob
-  def work
+  @queue = :default
 
-  end
-end
-
-class CallbackJob
-  def work
+  def self.perform(file)
+    TextExtractor.new(file).call
   end
 end
 
@@ -34,16 +17,14 @@ class ExtractorAPI < Sinatra::Base
   end
 
   def message(params)
-    output = ""
-    output << "| You need a file" unless params.has_key?('file')
-    output << "| You need a calback url" unless params.has_key?('calback')
-    output
+    output = []
+    output << "You need a file parameter" unless params.has_key?('file')
+    output << "You need a callback parameter" unless params.has_key?('callback')
+    output.join('. ')
   end
 
   post "/v1/convert" do
     content_type :json
-
-    puts "fsdfsdf"
 
     if valid_request?(params)
       # Schedule conversion
