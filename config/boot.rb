@@ -1,6 +1,8 @@
 APP_ENV = ENV["APP_ENV"] ||= "development" unless defined?(APP_ENV)
+APP_ROOT = File.expand_path("../..", __FILE__).gsub(/releases\/[0-9]+/, "current") + "/" unless defined?(APP_ROOT)
 
-require 'logger'
+require "yaml"
+require "logger"
 require "rubygems" unless defined?(Gem)
 Bundler.require(:default)
 
