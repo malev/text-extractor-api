@@ -4,12 +4,11 @@ require 'logger'
 require "rubygems" unless defined?(Gem)
 Bundler.require(:default)
 
-
 LOGGER = Logger.new("logs/extractor_#{APP_ENV}.log")
-LOGGER.level = Logger::DEBUG
+LOGGER.level = APP_ENV == "development" ? Logger::INFO : Logger::ERROR
 
 Resque.logger = LOGGER
-Resque.logger.level = Logger::DEBUG
+Resque.logger.level = LOGGER.level
 
 module Kernel
   def logger(message, level=:info)
