@@ -15,3 +15,6 @@ module Kernel
     LOGGER.send(level, message)
   end
 end
+
+resque_config = YAML.load_file(File.join(APP_ROOT, 'config', 'resque.yml'))
+Resque.redis = resque_config[APP_ENV]
