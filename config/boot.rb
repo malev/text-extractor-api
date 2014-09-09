@@ -1,5 +1,6 @@
 APP_ENV = ENV["APP_ENV"] ||= "development" unless defined?(APP_ENV)
 APP_ROOT = File.expand_path("../..", __FILE__).gsub(/releases\/[0-9]+/, "current") + "/" unless defined?(APP_ROOT)
+$:.unshift(File.expand_path('../lib/', File.dirname(__FILE__)))
 
 require "yaml"
 require "logger"
