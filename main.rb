@@ -1,15 +1,12 @@
-require 'json'
-require 'resque'
+$:.unshift(File.expand_path('config/', File.dirname(__FILE__)))
+
+require "boot"
+require "json"
 require "sinatra/base"
+require "sinatra/reloader" if development?
+require "text_extractor_job"
+require "text_extractor"
 
-
-class TextExtractionJob
-  @queue = :default
-
-  def self.perform(file)
-    TextExtractor.new(file).call
-  end
-end
 
 class ExtractorAPI < Sinatra::Base
   def valid_request?(params)
@@ -27,8 +24,10 @@ class ExtractorAPI < Sinatra::Base
     content_type :json
 
     if valid_request?(params)
-      # Schedule conversion
-      { status: 'ok' }.to_json
+      {
+        status: 'ok',
+        text: TextExtractor.new(params[:file][:tempfile]).call
+      }.to_json
     else
       response.status = 400 # Bad Request
       { status: 'error', message: message(params)}.to_json
