@@ -9,28 +9,47 @@ require "text_extractor"
 
 
 class ExtractorAPI < Sinatra::Base
-  def valid_request?(params)
+  def valid_request?
     params['file'] && params['callback']
   end
 
-  def message(params)
-    output = []
-    output << "You need a file parameter" unless params.has_key?('file')
-    output << "You need a callback parameter" unless params.has_key?('callback')
-    output.join('. ')
+  def enqueue
+    encoding = params["encoding"]
+    callback = params["callback"]
+    filename = params["file"][:filename]
+    tempfilename = store_temp_file
+    Resque.enqueue(TextExtractionJob, tempfilename, filename, callback, encoding)
+  end
+
+  def message
+    errors = {}
+    errors['missing_file'] = "You need a file parameter" unless params.has_key?('file')
+    errors['missing_callback'] = "You need a callback parameter" unless params.has_key?('callback')
+    errors
+  end
+
+  def store_temp_file
+    filename = SecureRandom.uuid + '.tmp'
+    FileUtils.cp(tempfile_path, File.join('temp', filename))
+    filename
+  end
+
+  def tempfile_path
+    params['file'][:tempfile].path
   end
 
   post "/v1/convert" do
     content_type :json
 
-    if valid_request?(params)
+    if valid_request?
+      enqueue
       {
         status: 'ok',
-        text: TextExtractor.new(params[:file][:tempfile]).call
+        text: 'empty'
       }.to_json
     else
       response.status = 400 # Bad Request
-      { status: 'error', message: message(params)}.to_json
+      { status: 'error', errors: message(params)}.to_json
     end
   end
 end
