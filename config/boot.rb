@@ -7,6 +7,8 @@ require "logger"
 require "rubygems" unless defined?(Gem)
 Bundler.require(:default)
 
+Dir["#{APP_ROOT}/lib/**/*.rb"].sort.each { |file| require file }
+
 LOGGER = Logger.new("logs/extractor_#{APP_ENV}.log")
 LOGGER.level = APP_ENV == "development" ? Logger::INFO : Logger::ERROR
 
