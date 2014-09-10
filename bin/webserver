@@ -1,0 +1,8 @@
+#!/Users/malev/.rbenv/shims/ruby
+
+$:.unshift(File.expand_path('../config/', File.dirname(__FILE__)))
+
+require "boot"
+require "extractor_api"
+
+ExtractorAPI.run!

@@ -1,6 +1,5 @@
 $:.unshift(File.expand_path('config/', File.dirname(__FILE__)))
 
-require "boot"
 require "json"
 require "sinatra/base"
 require "sinatra/reloader" if development?
@@ -53,5 +52,3 @@ class ExtractorAPI < Sinatra::Base
     end
   end
 end
-
-ExtractorAPI.run!
