@@ -2,7 +2,7 @@ $:.unshift(File.expand_path('config/', File.dirname(__FILE__)))
 
 require "json"
 require "sinatra/base"
-require "sinatra/reloader" if development?
+require "sinatra/reloader"
 require "text_extractor_job"
 require "text_extractor"
 
@@ -13,11 +13,12 @@ class ExtractorAPI < Sinatra::Base
   end
 
   def enqueue
-    encoding = params["encoding"]
-    callback = params["callback"]
-    filename = params["file"][:filename]
-    tempfilename = store_temp_file
-    Resque.enqueue(TextExtractionJob, tempfilename, filename, callback, encoding)
+    Resque.enqueue(TextExtractionJob, {
+      tempfilename: store_temp_file,
+      filename: params["file"][:filename],
+      callback: params["callback"],
+      encoding: params.fetch('encoding')
+    })
   end
 
   def message
@@ -41,10 +42,11 @@ class ExtractorAPI < Sinatra::Base
     content_type :json
 
     if valid_request?
-      enqueue
+      # enqueue
       {
-        status: 'ok',
-        text: 'empty'
+        status: 'scheduled',
+        text: TextExtractor.new(File.join('temp', store_temp_file)).call,
+        filename: params["file"][:filename]
       }.to_json
     else
       response.status = 400 # Bad Request
