@@ -3,17 +3,30 @@ require 'text_extractor'
 
 
 class TextExtractionJob
+  attr_reader :params
   @queue = :default
 
   def self.perform(params)
-    self.new(params).work
+    url = params['callback']
+    response = self.new(params).call
+
+    # Resque.enqueue(EnsureDelete, params['filename'])
+    Resque.enqueue(CallbackJob, url, response)
   end
 
   def initialize(params)
     @params = params
   end
 
-  def work
-    text = TextExtractor.new(File.join('temp', @params['tempfilename'])).call
+  def call
+    {
+      filename: params['filename'],
+      uuid: params['uuid'],
+      content: text
+    }
+  end
+
+  def text
+    TextExtractor.new(File.join('temp', @params['tempfilename'])).call
   end
 end

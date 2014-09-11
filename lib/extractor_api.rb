@@ -24,6 +24,7 @@ class ExtractorAPI < Sinatra::Base
       callback: params["callback"],
       encoding: params.fetch('encoding')
     })
+    uuid
   end
 
   def message
@@ -33,8 +34,12 @@ class ExtractorAPI < Sinatra::Base
     errors
   end
 
+  def uuid
+    @uuid ||= SecureRandom.uuid
+  end
+
   def store_temp_file
-    filename = SecureRandom.uuid + '.tmp'
+    filename = uuid + '.tmp'
     FileUtils.cp(tempfile_path, File.join('temp', filename))
     filename
   end
@@ -47,11 +52,10 @@ class ExtractorAPI < Sinatra::Base
     content_type :json
 
     if valid_request?
-      # enqueue
       {
         status: 'scheduled',
-        text: TextExtractor.new(File.join('temp', store_temp_file)).call,
-        filename: params["file"][:filename]
+        filename: params["file"][:filename],
+        uuid: enqueue
       }.to_json
     else
       response.status = 400 # Bad Request
