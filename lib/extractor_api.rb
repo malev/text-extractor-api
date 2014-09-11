@@ -8,6 +8,11 @@ require "text_extractor"
 
 
 class ExtractorAPI < Sinatra::Base
+  set :logging, true
+  configure :development do
+    register Sinatra::Reloader
+  end
+
   def valid_request?
     params['file'] && params['callback']
   end

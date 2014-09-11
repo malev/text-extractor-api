@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'sinatra'
-gem 'resque'
 gem 'docsplit'
-gem 'rake'
+gem 'httparty'
+gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'rake'
+gem 'resque'
 
 group :development do
   gem 'pry'
