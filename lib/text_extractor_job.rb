@@ -10,7 +10,7 @@ class TextExtractionJob
     url = params['callback']
     response = self.new(params).call
 
-    # Resque.enqueue(EnsureDelete, params['filename'])
+    Resque.enqueue(EnsureDeleteJob, params['tempfilename'])
     Resque.enqueue(CallbackJob, url, response)
   end
 
