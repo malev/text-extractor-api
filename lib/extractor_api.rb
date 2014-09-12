@@ -20,6 +20,22 @@ class ExtractorAPI < Sinatra::Base
 
   attr_reader :errors
 
+  post "/v1/convert-now" do
+    content_type :json
+    @errors = {}
+
+    if valid_now_request?
+      {
+        status: 'scheduled',
+        filename: params["file"][:filename],
+        text: TextExtractor.new(tempfile_path).call
+      }.to_json
+    else
+      response.status = 400 # Bad Request
+      { status: 'error', errors: errors}.to_json
+    end
+  end
+
   post "/v1/convert" do
     content_type :json
     @errors = {}
@@ -36,6 +52,10 @@ class ExtractorAPI < Sinatra::Base
     end
   end
 
+  def valid_now_request?
+    valid_now_size? && valid_file? && valid_callback? && valid_server_status?
+  end
+
   def valid_request?
     valid_size? && valid_file? && valid_callback? && valid_server_status?
   end
@@ -45,6 +65,15 @@ class ExtractorAPI < Sinatra::Base
       true
     else
       errors[:server_busy] = settings.error_messages.server_busy
+      false
+    end
+  end
+
+  def valid_now_size?
+    if request.env['CONTENT_LENGTH'].to_i <= settings.max_now_file_size
+      true
+    else
+      errors[:file_size] = settings.error_messages.file_now_size
       false
     end
   end
