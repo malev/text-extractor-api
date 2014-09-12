@@ -8,13 +8,43 @@ require "text_extractor"
 
 
 class ExtractorAPI < Sinatra::Base
+  attr_reader :errors
+
   set :logging, true
+
   configure :development do
     register Sinatra::Reloader
   end
 
   def valid_request?
-    params['file'] && params['callback']
+    valid_size? && valid_file? && valid_callback?
+  end
+
+  def valid_size?
+    if request.env['CONTENT_LENGTH'].to_i <= 5_120_000
+      true
+    else
+      errors[:request_size] = "The Request is too big. Maybe you are trying to process a file bigger that 5Mb."
+      false
+    end
+  end
+
+  def valid_file?
+    if params.has_key?('file')
+      true
+    else
+      errors[:missing_file] = "You need to upload a file to convert."
+      false
+    end
+  end
+
+  def valid_callback?
+    if params.has_key?('callback')
+      true
+    else
+      errors[:missing_file] = "You need a callback parameter."
+      false
+    end
   end
 
   def enqueue
@@ -25,13 +55,6 @@ class ExtractorAPI < Sinatra::Base
       encoding: params.fetch('encoding')
     })
     uuid
-  end
-
-  def message
-    errors = {}
-    errors['missing_file'] = "You need a file parameter" unless params.has_key?('file')
-    errors['missing_callback'] = "You need a callback parameter" unless params.has_key?('callback')
-    errors
   end
 
   def uuid
@@ -50,6 +73,7 @@ class ExtractorAPI < Sinatra::Base
 
   post "/v1/convert" do
     content_type :json
+    @errors = {}
 
     if valid_request?
       {
@@ -59,7 +83,7 @@ class ExtractorAPI < Sinatra::Base
       }.to_json
     else
       response.status = 400 # Bad Request
-      { status: 'error', errors: message(params)}.to_json
+      { status: 'error', errors: errors}.to_json
     end
   end
 end
