@@ -3,7 +3,7 @@ $:.unshift(File.expand_path('config/', File.dirname(__FILE__)))
 require "json"
 require "sinatra/base"
 require "sinatra/reloader"
-require "text_extractor_job"
+require "file_process_job"
 require "text_extractor"
 
 
@@ -18,7 +18,7 @@ class ExtractorAPI < Sinatra::Base
   end
 
   def enqueue
-    Resque.enqueue(TextExtractionJob, {
+    Resque.enqueue(FileProcessJob, {
       tempfilename: store_temp_file,
       filename: params["file"][:filename],
       callback: params["callback"],
