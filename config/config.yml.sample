@@ -1,0 +1,11 @@
+max_file_size: 5_120_000
+max_now_file_size: 1_024_000
+max_server_space: 102_400_000
+temp_directory: temp
+
+error_message:
+  server_busy: "The server is too busy at the moment, please try again later."
+  file_now_size: "You can't upload a file bigger than 2Mb."
+  file_size: "You can't upload a file bigger than 5Mb."
+  missing_file: "You need to upload a file to convert."
+  missing_callback: "You need to define a callback function."
