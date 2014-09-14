@@ -13,12 +13,18 @@ class ExtractorAPI < Sinatra::Base
   config_file File.expand_path("../../config/config.yml", __FILE__)
 
   set :logging, true
+  set :static, File.join(APP_ROOT, 'static')
+  set :views, File.join(APP_ROOT, 'views')
 
   configure :development do
     register Sinatra::Reloader
   end
 
   attr_reader :errors
+
+  get '/' do
+    erb :index, layout: :layout
+  end
 
   post "/v1/convert-now" do
     content_type :json
