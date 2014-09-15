@@ -13,7 +13,7 @@ class ExtractorAPI < Sinatra::Base
   config_file File.expand_path("../../config/config.yml", __FILE__)
 
   set :logging, true
-  set :static, File.join(APP_ROOT, 'static')
+  set :public_folder, File.join(APP_ROOT, 'static')
   set :views, File.join(APP_ROOT, 'views')
 
   configure :development do
