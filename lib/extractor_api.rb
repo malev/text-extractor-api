@@ -22,10 +22,6 @@ class ExtractorAPI < Sinatra::Base
 
   attr_reader :errors
 
-  get '/' do
-    erb :index, layout: :layout
-  end
-
   post "/v1/convert-now" do
     content_type :json
     @errors = {}
