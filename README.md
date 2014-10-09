@@ -6,20 +6,18 @@ Currently there are two options available: `convert-now` for files smaller than 
 
 Send a request to `POST /v1/convert-now` with:
 
-* [encoding]: **utf-8**
 * file: pdf, docx or odt files (Files can't be bigger than 1Mb).
 
 Or send a request to `POST /v1/convert` with:
 
-* [encoding]: **utf-8**
 * file: pdf, docx or odt files (Files can't be bigger than 5Mb).
 * callback: url where you expect the results. The response will look like:
 
 ```json
 {
-	"filename": "your_file.pdf",
-	"uuid": "unique identifier",
-	"content": "The extracted text"
+    "filename": "your_file.pdf",
+    "uuid": "unique identifier",
+    "content": "The extracted text"
 }
 ```
 
@@ -27,7 +25,7 @@ Or send a request to `POST /v1/convert` with:
 
 You can have your own **TextExtractorApi Server**, you only need to clone this repo and make sure you have the dependencies descripted [here](http://documentcloud.github.io/docsplit/) and of course **Ruby 2.1.2**.
 
-	git clone git@github.com:malev/text-extractor-api.git
+    git clone git@github.com:malev/text-extractor-api.git
     cp config/config.yml.sample config/config.yml
     cp config/resque.yml.sample config/resque.yml
     bundle
