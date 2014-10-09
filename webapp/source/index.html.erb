@@ -1,10 +1,33 @@
----
-title: Welcome to Middleman
----
-
-<div class="welcome">
-  <h1>Middleman is Watching</h1>
+<div class="main-container">
+  <h1>Text Extractor API</h1>
   <p class="doc">
-    <%= link_to "Read Online Documentation", "http://middlemanapp.com/" %>
-  </p><!-- .doc -->
-</div><!-- .welcome -->
+    Extract the content from pdf, txt, doc and odt files.
+  </p>
+  <p>
+    If your file is smaller than <b>1MB</b> just upload it here. In case you want to use the API follow:
+  </p>
+  <p>
+    Send a request to
+    <pre>POST /v1/convert-now</pre>
+    with <b class="arg">file</b>: pdf, docx or odt files (Files can't be bigger than 1Mb).
+  </p>
+  <p>
+    Example:
+    <pre>curl api.codingnews.info/v1/convert-now --form file=@data/YOURFILE.pdf</pre>
+  </p>
+  <p>If your file is bigger than <b>5Mb</b> you will need to use:
+    <pre>POST /v1/convert</pre>
+   with:
+   </p>
+  <ul>
+    <li>file: pdf, docx or odt files (Files can't be bigger than <b>5Mb</b>).</li>
+    <li>callback: url where you expect the results. The response will look like:</li>
+  </ul>
+  <% code("json") do %>
+  {
+      "filename": "your_file.pdf",
+      "uuid": "unique identifier",
+      "content": "The extracted text"
+  }
+  <% end %>
+</div>

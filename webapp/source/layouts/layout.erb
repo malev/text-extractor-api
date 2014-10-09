@@ -3,14 +3,44 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title><%= current_page.data.title || "Text Extractor" %></title>
+    <title>Text Extractor API</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <%= stylesheet_link_tag "normalize", "all" %>
+    <style type="text/css">
+      <%= Rouge::Themes::Github.render(:scope => '.highlight') %>
+      .highlight {
+        background-color: #FFF;
+      }
+    </style>
+    <link href='http://fonts.googleapis.com/css?family=Oxygen:400,300,700'rel='stylesheet' type='text/css'>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   </head>
   <body class="<%= page_classes %>">
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <header class="main">
+      <div class="title">
+        <a href="/"><h2>Text<strong>Extractor</strong></h2></a>
+      </div>
+      <div class="links">
+        <ul>
+          <li><a href="https://github.com/malev/text-extractor-api"><i class="fa fa-github-alt"></i></a></li>
+        </ul>
+      </div>
+    </header>
     <%= yield %>
+    <footer class="footer">
+      <div class="resource">
+        <label>Resources</label>
+        <ul class="links">
+          <li><a href="https://github.com/malev/text-extractor-api">Fork in Github</a></li>
+          <li><a href="https://github.com/malev/text-extractor-api/issues">Report a bug</a></li>
+        </ul>
+      </div>
+    </footer>
     <%= javascript_include_tag  "all" %>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>

@@ -1,0 +1,105 @@
+@charset "utf-8";
+
+@import "bourbon";
+@import "base/base";   /* Bitters needs to be imported before Neat */
+@import "neat";
+
+body{
+  margin-bottom: 0px;
+}
+
+// HEADER
+header.main {
+  padding-top: 1em;
+  h2 {
+    color: $light-green;
+    letter-spacing: -2px;
+    & strong{
+      color: $light-gray;
+    }
+  }
+  @include outer-container;
+  .title{
+    @include span-columns(6);
+  }
+  .links {
+    @include span-columns(6);
+    // @include omega();
+    ul {
+      float: right;
+      li {
+        display: inline;
+        margin: 0px 10px;
+      }
+    }
+  }
+  @include media($mobile) {
+    .title{
+      @include span-columns(12);
+    }
+    .links {
+      @include span-columns(12);
+      @include omega();
+      margin-top: 0;
+      ul {
+        float: left;
+        li:first-child{
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+.main-container{
+  @include outer-container;
+  margin-top: 1em;
+  article.list {
+    @include span-columns(12);
+    border-bottom: 2px solid $light-gray;
+    margin-bottom: 1em;
+    padding-bottom: 0.5em;
+    .date{
+      color: darken($light-gray, 40);
+      float: right;
+    }
+  }
+  header.article {
+    border-right: 7px solid $light-green;
+    border-bottom: 2px solid $light-green;
+    text-align: right;
+    padding: 1em;
+    margin-bottom: 1em;
+    .date {
+      font-style: italic;
+    }
+  }
+  article.post {
+    h1{
+      font-size: $base-font-size * 1.75;
+    }
+    h2 {
+      font-size: $base-font-size * 1.5;
+    }
+    h3 {
+      font-size: $base-font-size * 1.25;
+    }
+    h4, h5, h6 {
+      font-size: $base-font-size;
+    }
+  }
+  .comments {
+    margin: 1em 0;
+  }
+}
+
+footer.footer {
+  @include outer-container;
+  border-bottom: 20px solid #DDD;
+  .resource {
+    margin-bottom: 1em;
+    ul li {
+      display: inline-block;
+      margin: 0 .5em;
+    }
+  }
+}
