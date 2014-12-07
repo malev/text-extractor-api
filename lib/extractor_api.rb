@@ -29,6 +29,7 @@ class ExtractorAPI < Sinatra::Base
       {
         status: 'scheduled',
         filename: params[:file][:filename],
+        filesize: params['file'][:tempfile].size,
         text: TextExtractor.new(tempfile_path).call
       }.to_json
     else
