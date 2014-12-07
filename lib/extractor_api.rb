@@ -27,10 +27,14 @@ class ExtractorAPI < Sinatra::Base
 
     if valid_request?
       {
-        status: 'scheduled',
-        filename: params[:file][:filename],
-        filesize: params['file'][:tempfile].size,
-        text: TextExtractor.new(tempfile_path).call
+        status: '200',
+        metadata: {
+          filename: params[:file][:filename],
+          filesize: params['file'][:tempfile].size
+
+        },
+        result: TextExtractor.new(tempfile_path).call,
+        errors: []
       }.to_json
     else
       response.status = 400 # Bad Request
